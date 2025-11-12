@@ -1,27 +1,35 @@
 # Gemini Code Assist
 - Where is it best? 
     - Simple questions... in context (open tab, cusor position, etc...)
+    - Adding context with the `@`, e.g. `@filename.ext`
+        - *NOTE: for security reasons, files can only be added relative to the workspace directory*
+    - Can use the full context window ~ whole code base.
     - Simpler, single file changes
+
+    * `Please give me the 2 url endpoints for getting all quotes and getting a random quote, just give me the urls nothing else`
+    * `can you give me the fully qualified urls if this app is running locally on 8083`
+
+    - No Gemini Code Assist *Request Quota*
+
 - Agent Mode
     - Goal oriented
-    - Using multiple files
-    - Uses tools
-    - "ReAct" (reason) and take actions (acting) to solve a problem. It iterates through a loop of thinking, taking an action.
-
+    - Uses tools (`/tools`)
+    - "ReAct" (reason) and take actions (acting) to solve a problem. It iterates through a **loop** of thinking, taking an action.
+    - Quota
+        * 1,500 Requests per day (Standard)
+        * 2,000 Requests per day (Enterprise)  
     * Test Agent Mode:
         ```
-        Setup a proxy in angular so that I can avoid CORS errors when calling the server on port 8083 in development?
+        Can you update this application in order to call the backend service GET end points and configure a proxy at /api in angular so that I don't run into a CORS error connecting to these endpoints.   Make sure to configure the proxy to rewrite the /api path to connect to these urls:
+
+        http://localhost:8083/quotes 
+        http://localhost:8083/random-quote
+        http://localhost:8083/generate-quote
+
+        Do not run any tests or verify, just make the changes.
         ```
 
-# Overview of agentic development
-A few demonstrations of the Gemini CLI.
-
-## The Agent Loop
-* State the goal in clear terms, try to avoid ambiguity, provide a means to verify (i.e. tests)
-* Manage context! (`100% context left`)
-* Use tools! `/tools`
-* Adding context with @filename.ext, urls or asking to use the websearch tool.
-    - *NOTE: for security reasons, files can only be added relative to the workspace directory*
+# Gemini CLI
 
 ## Save a chat
 ```
@@ -63,6 +71,7 @@ Examples of using MCP Servers
 ```
 
 ## Context is everything!
+* Manage context! (`100% context left`)
 * **Context Poisoning**: When a hallucination or other error makes it into the context, where it is repeatedly referenced.
 * **Context Distraction**: When a context grows so long that the model over-focuses on the context, neglecting what it learned during training.
 * **Context Confusion**: When superfluous information in the context is used by the model to generate a low-quality response.
@@ -120,7 +129,7 @@ Create a new AiQuoteService that will generate a Quote object using a "theme" pa
 
 AiQuoteService will use the gemini-2.5-flash-lite model in Vertex AI with the max tokens output set to 64.  The model will be invoked using spring-ai-starter-model-vertex-ai-gemini.  Use context7 to lookup the documentation on how to implement this with spring-ai.  
 
-Add a new endpoint /generate-quote to the QuoteController which takes the parameter "prompt" and returns the Quote object by calling the AiQuoteService.
+Add a new GET endpoint /generate-quote to the QuoteController which takes the parameter "prompt" and returns the Quote object by calling the AiQuoteService.
 
 Do not implement any tests in this plan.
 ```
@@ -169,6 +178,8 @@ Installation instruction and documentation for Gemini CLI: https://github.com/go
 ```
 
 ## Tips
+* State your goal in clear terms, try to avoid ambiguity, provide a means to verify (i.e. tests)
+    - Use GEMINI.md to clarify codind standards, remove ambiguity in frameworks, versions, etc...
 * LLMs perform better when given rigid constraints rather than polite suggestions. They don't get offended by all-caps.
     - Use terms like **"CRITICAL PROTOCOL"**, **"MUST ADHERE RIGIDLY"**, and **"NEVER EXECUTE"**
 * Provide examples (few-shot)

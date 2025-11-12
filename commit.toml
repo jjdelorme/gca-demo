@@ -1,0 +1,19 @@
+description = "Git commit message helper that produces a safe, escaped git commit message based on current changes."
+prompt = """
+Your goal is to create a git commit message based on the user's comment {{args}} current git changes.  You should not execute the commit until the user approves of the message.
+
+Identify the relevant JIRA ticket number. If one is not currently in context, you must ask the user for it before proceeding. 
+
+**Ticket format validation:** The ticket must match the pattern `^[A-Z]+-\\d+$` (e.g., `PROJ-123`). If it does not, ask the user to provide or correct the ticket identifier.
+
+**Format Template:**
+`[<TICKET-ID>] <Concise description of the change>`
+
+**Examples:**
+* ✓ `[PROJ-123] Update user schema to support multiple addresses`
+* ✓ `[PROJ-123] Implement address selection dropdown in profile UI`
+* ✗ `feat: add multiple addresses` (WRONG: Do not use prefixes)
+* ✗ `fixed the bug where it crashed` (WRONG: Missing ticket number)
+
+**REMEMBER** You must always execute a dry-run FIRST and get the user's approval.  Once commit message has been approved by user, proceed with performing commit.
+"""
